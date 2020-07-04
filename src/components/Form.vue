@@ -38,8 +38,26 @@
             @input="$v.userData.age.$touch()"
             @blur="$v.userData.age.$touch()"
           ></v-text-field>
+          <v-row>
+            <v-col cols="6">
+              <v-checkbox class="ma-0 pa-0" v-model="sendMail" label="Send Email" value="SendMail"></v-checkbox>
+              <v-checkbox
+                class="ma-0 pa-0"
+                v-model="sendMail"
+                label="Send Infomail"
+                value="SendInfomail"
+              ></v-checkbox>
+            </v-col>
+            <v-col cols="6">
+              <v-radio-group v-model="gender" column>
+                <v-radio label="Male" value="male"></v-radio>
+                <v-radio label="Female" value="female"></v-radio>
+              </v-radio-group>
+            </v-col>
+          </v-row>
+          <v-select v-model="selectedPriority" label="Priority" :items="itemsPriority"></v-select>
           <v-textarea
-            v-model.lazy="userData.message"
+            v-model.lazy="message"
             label="Message"
             shaped
             rows="5"
@@ -47,7 +65,6 @@
             outlined
             row-height="15"
           ></v-textarea>
-
           <v-card-actions>
             <v-btn class="mr-4" @click="submit">submit</v-btn>
             <v-btn @click="clear">clear</v-btn>
@@ -62,10 +79,15 @@
         <p>Mail: {{userData.email}}</p>
         <p>Passworld: {{userData.passworld}}</p>
         <p>Age: {{userData.age}}</p>
-        <p>Message: {{userData.message}}</p>
-        <p>Send Email?</p>
-        <p>Gender:</p>
-        <p>Priority:</p>
+        <p style="white-space: pre">Message: {{message}}</p>
+        <p>
+          <strong>Send Email?</strong>
+        </p>
+        <ul>
+          <li v-for="(info,index) in sendMail" :key="index">{{info}}</li>
+        </ul>
+        <p>Gender: {{gender}}</p>
+        <p>Priority: {{selectedPriority}}</p>
       </v-card-text>
     </v-card>
   </div>
@@ -90,9 +112,13 @@ export default {
     userData: {
       email: "",
       passworld: "",
-      age: null,
-      message: ""
+      age: null
     },
+    message: "",
+    sendMail: [],
+    gender: "",
+    itemsPriority: ["High", "Medium", "Low"],
+    selectedPriority: "",
     show: false
   }),
 
@@ -129,6 +155,10 @@ export default {
     clear() {
       this.$v.$reset();
       this.userData = [];
+      this.message = "";
+      this.sendMail = [];
+      this.gender = "";
+      this.selectedPriority = "";
     }
   }
 };
